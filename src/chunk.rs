@@ -150,7 +150,7 @@ impl ChunksExt for [Spanned<Chunk>] {
             match &val.v {
                 Chunk::Normal(s) => {
                     for mut c in s.chars() {
-                        if c == '\n' || c == '\r' {
+                        if c.is_ascii_whitespace() {
                             if prev_was_whitespace {
                                 continue;
                             } else {
@@ -175,7 +175,9 @@ impl ChunksExt for [Spanned<Chunk>] {
             }
         }
 
-        out
+        // Ideally we should only trim ADCII whitespaces but this doesn't work.
+        // out.trim_matches(char::is_ascii_whitespace).to_string()
+        out.trim().to_string()
     }
 
     fn span(&self) -> Span {

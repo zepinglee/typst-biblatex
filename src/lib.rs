@@ -1202,4 +1202,19 @@ Martin}}"#;
             _ => panic!(),
         }
     }
+
+    #[test]
+    fn test_whitespaces() {
+        let contents = String::from(
+            "@string{foo = { \t\nA \t\n} }
+            @misc{ITEM-1,
+                title = {Prefix:} # foo # {suffix},
+                booktitle = { \t\nB \t\nC \t\n},
+            }"
+        );
+        let bibliography = Bibliography::parse(&contents).unwrap();
+        let entry = bibliography.get("ITEM-1").unwrap();
+        assert_eq!(entry.book_title().unwrap().format_verbatim(), "B C");
+        assert_eq!(entry.title().unwrap().format_verbatim(), "Prefix: A suffix");
+    }
 }
